@@ -9,21 +9,22 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 
 ### 2.1 Magneet & Topologie
 - **Magneet:** 1x N48 Neodymium schijfmagneet (⌀75 mm × 15 mm, houdkracht ca. 250 kg).
-- **Motor Topologie:** **Neodymium Pot / Cup Design (Optie B - Aanbevolen)**.
-  - De magneet bevindt zich op de bodem van een stalen behuizing (cup).
-  - Bovenop de magneet bevindt zich een massieve stalen pole piece.
-  - De opstaande stalen rand van de pot vormt de buitenste ring van de luchtspleet.
-- **Luchtspleet ($h_{gap}$):** 8 mm hoog.
+- **Motor Topologie:** **Neodymium Pot / Cup Design met Geïntegreerde Inwendige Kamer**.
+  - De magneet (⌀75x15mm) en stalen poolkern bevinden zich op een centraal voetstuk in de stalen pot.
+  - De opstaande stalen rand van de pot vormt aan de bovenzijde de buitenste luchtspleetring (8 mm hoog).
+  - Tussen het centrale voetstuk en de buitenwand bevindt zich een **ringvormige inwendige kamer (50 mm diep)** waar de 3" spreekspoeldrager vrij in kan bewegen.
+- **Luchtspleet ($h_{gap}$):** 8 mm hoog ($B \approx 0.99 \text{ Tesla}$).
 - **Spreekspoel Diameter:** 3 inch (76.2 mm nominale binnendiameter).
 
-### 2.2 Uitslag ($X_{max}$) & 50 mm Bottom-Out Bescherming
+### 2.2 Uitslag ($X_{max}$) & Inwendige 50 mm Bottom-Out Kamer
 - **Overhung Geometrie:**
   - Spoelhoogte ($h_{vc}$): **38 mm**
   - Gap hoogte ($h_{gap}$): **8 mm**
   - **Lineaire Uitslag ($X_{max}$):** $(38 - 8) / 2 = \mathbf{15 \text{ mm}}$ (30 mm peak-to-peak).
-- **50 mm Inwaartse Speling (Bottom-Out Protection):**
-  - Om bij extreme experimentele belasting te voorkomen dat de spreekspoel/drager de bodem raakt, wordt een verdiepte kamer (pole chamber) van **50 mm** onder de spreekspoel vrijgehouden.
-  - **Effect op prestaties:** Magnetische flux ($B_g$) en $BL$-factor blijven 100% ongewijzigd, aangezien de magnetische luchtspleet zich uitsluitend bij de top plate en poolkern bevindt.
+- **50 mm Inwendige Kamer (Bottom-Out Bescherming):**
+  - Binnenin de stalen cup bevindt zich een 50 mm diepe ringvormige sleuf.
+  - Bij extreem grote inwaartse uitslag zakt de spreekspoeldrager in deze kamer weg **zonder ooit de bodem van de motor te raken**.
+  - **Effect op prestaties:** Magnetische flux ($B_g$) en $BL$-factor blijven 100% geoptimaliseerd, aangezien de magnetische luchtspleet zich uitsluitend bij de bovenste top plate ring en poolkern bevindt.
 
 ---
 
@@ -73,4 +74,4 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 ---
 
 ## 7. Schematisch Overzicht Motor
-Zie het gegenereerde schematische diagram `motor_ontwerpen_vergelijking.png` voor de visuele doorsnede van de motor inclusief de 50 mm clearance zone.
+Zie het gegenereerde schematische diagram `motor_ontwerpen_vergelijking.png` voor de fysisch accurate doorsnede van de pot-motor inclusief de inwendige 50 mm ringvormige speling kamer.

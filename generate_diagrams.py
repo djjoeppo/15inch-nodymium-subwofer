@@ -1,84 +1,81 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-def draw_motor_designs():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
-    fig.suptitle('Motor Ontwerp Vergelijking (Cross-section)', fontsize=16, fontweight='bold')
+def draw_correct_motor_design():
+    fig, ax = plt.subplots(figsize=(10, 8))
+    fig.suptitle('Fysisch Accurate Doorsnede: Neodymium Pot-Motor met 50mm Inwaartse Kamer', fontsize=14, fontweight='bold')
 
-    # --- Optie A: Traditional Overhung Design ---
-    ax1.set_title('Optie A: Traditionele Overhung Motor', fontsize=12, fontweight='bold', pad=10)
+    # Dimensions in mm
+    # Center axis x=0
+    # Magnet: Dia 75mm -> radius 37.5mm, thickness 15mm
+    # Pole piece: Dia 75mm -> radius 37.5mm, height 8mm (gap height)
+    # Voice coil Former: Dia 3" (76.2mm) -> inner radius 38.1mm, outer radius ~39.0mm
+    # Voice coil winding height: 38mm
+    # Magnetic Gap: x = 37.5 to 39.0 (1.5mm gap width), y = 15 to 23 (8mm gap height)
+    # Internal clearance chamber depth: 50mm below gap (from y = -35 to y = 15)
 
-    # Backplate
-    ax1.add_patch(patches.Rectangle((-50, -10), 100, 10, facecolor='#7f8c8d', edgecolor='black', label='Staal (Back/Top plate)'))
-    # Pole piece
-    ax1.add_patch(patches.Rectangle((-37.5, 0), 75, 40, facecolor='#95a5a6', edgecolor='black', label='Staal Pole Piece'))
-    # Magnet
-    ax1.add_patch(patches.Rectangle((-37.5, 0), 75, 15, facecolor='#e74c3c', edgecolor='black', alpha=0.7, label='N48 Magneet (⌀75x15)'))
-    # Pole piece top extension
-    ax1.add_patch(patches.Rectangle((-37.5, 15), 75, 25, facecolor='#95a5a6', edgecolor='black'))
-    # Top plate (left & right)
-    ax1.add_patch(patches.Rectangle((-65, 30), 22.5, 10, facecolor='#7f8c8d', edgecolor='black'))
-    ax1.add_patch(patches.Rectangle((42.5, 30), 22.5, 10, facecolor='#7f8c8d', edgecolor='black'))
+    # 1. Outer Steel Cup (Stalen Pot Behuizing)
+    # Bottom plate of cup: x = -55 to 55, y = -45 to -35 (10mm thick steel)
+    ax.add_patch(patches.Rectangle((-55, -45), 110, 10, facecolor='#7f8c8d', edgecolor='black', label='Stalen Pot Behuizing (1008 Staal)'))
 
-    # Voice coil & Former (left & right)
-    ax1.add_patch(patches.Rectangle((-41, 15), 2, 35, facecolor='#f39c12', edgecolor='black', label='Spreekspoel + Former'))
-    ax1.add_patch(patches.Rectangle((39, 15), 2, 35, facecolor='#f39c12', edgecolor='black'))
+    # Outer Cup Vertical Wall: x = -55 to -40 and x = 40 to 55, y = -35 to 23
+    ax.add_patch(patches.Rectangle((-55, -35), 15, 58, facecolor='#7f8c8d', edgecolor='black'))
+    ax.add_patch(patches.Rectangle((40, -35), 15, 58, facecolor='#7f8c8d', edgecolor='black'))
 
-    # Annotations
-    ax1.annotate('Luchtspleet (Gap)', xy=(40, 35), xytext=(55, 50),
-                 arrowprops=dict(facecolor='black', shrink=0.05, width=1, headwidth=6), fontsize=9)
-    ax1.annotate('50mm Vrije Ruimte\n(Bumper Zone)', xy=(0, -2), xytext=(0, -25),
-                 arrowprops=dict(facecolor='blue', shrink=0.05, width=1, headwidth=6),
-                 ha='center', fontsize=9, color='blue')
+    # Gap Ring / Top Wall Narrowing (Forms outer boundary of magnetic gap): x = -40 to -39, y = 15 to 23
+    ax.add_patch(patches.Rectangle((-42, 15), 3, 8, facecolor='#34495e', edgecolor='black', label='Top Plate / Gap Ring (8mm)'))
+    ax.add_patch(patches.Rectangle((39, 15), 3, 8, facecolor='#34495e', edgecolor='black'))
 
-    ax1.set_xlim(-80, 80)
-    ax1.set_ylim(-35, 65)
-    ax1.set_aspect('equal')
-    ax1.grid(True, linestyle='--', alpha=0.5)
-    ax1.set_ylabel('Hoogte (mm)')
-    ax1.set_xlabel('Radius / Diameter (mm)')
+    # 2. Central Magnet Assembly
+    # Pedestal under magnet (to raise magnet/pole piece level with top gap ring):
+    ax.add_patch(patches.Rectangle((-37.5, -35), 75, 35, facecolor='#95a5a6', edgecolor='black', label='Stalen Verhoging / Voetstuk'))
+    # Magnet (N48 ⌀75x15mm): x = -37.5 to 37.5, y = 0 to 15
+    ax.add_patch(patches.Rectangle((-37.5, 0), 75, 15, facecolor='#e74c3c', edgecolor='black', alpha=0.8, label='N48 Magneet (⌀75x15mm)'))
+    # Central Pole Piece: x = -37.5 to 37.5, y = 15 to 23 (8mm height)
+    ax.add_patch(patches.Rectangle((-37.5, 15), 75, 8, facecolor='#95a5a6', edgecolor='black', label='Stalen Poolkern (Pole Piece)'))
 
-    # --- Optie B: Neodymium Pot / Cup Design ---
-    ax2.set_title('Optie B: Neodymium Pot / Cup Motor (Aanbevolen)', fontsize=12, fontweight='bold', pad=10)
+    # Pole vent (Centraal koelkanaal): x = -10 to 10, y = -45 to 23
+    ax.add_patch(patches.Rectangle((-10, -45), 20, 68, facecolor='white', edgecolor='black', linestyle='--', label='Centraal Koelkanaal (Pole Vent)'))
 
-    # Steel Cup / Pot Body
-    ax2.add_patch(patches.Rectangle((-50, 0), 100, 10, facecolor='#7f8c8d', edgecolor='black')) # Bottom
-    ax2.add_patch(patches.Rectangle((-50, 10), 8, 30, facecolor='#7f8c8d', edgecolor='black'))  # Left wall
-    ax2.add_patch(patches.Rectangle((42, 10), 8, 30, facecolor='#7f8c8d', edgecolor='black'))   # Right wall
+    # 3. Voice Coil & Former Assembly (Spreekspoel + Drager)
+    # Former (Alu/Titanium 0.1mm): radius 38.1mm to 38.3mm, length 60mm (y = -5 to 55)
+    # Coil windings: y = 0 to 38 (38mm winding height)
+    # Left side:
+    ax.add_patch(patches.Rectangle((-38.5, -5), 0.4, 60, facecolor='#f39c12', edgecolor='black', label='Spreekspoeldrager (Former)'))
+    ax.add_patch(patches.Rectangle((-38.9, 0), 0.8, 38, facecolor='#d35400', edgecolor='black', label='Koper Spreekspoel (38mm)'))
+    # Right side:
+    ax.add_patch(patches.Rectangle((38.1, -5), 0.4, 60, facecolor='#f39c12', edgecolor='black'))
+    ax.add_patch(patches.Rectangle((38.1, 0), 0.8, 38, facecolor='#d35400', edgecolor='black'))
 
-    # Magnet inside cup
-    ax2.add_patch(patches.Rectangle((-37.5, 10), 75, 15, facecolor='#e74c3c', edgecolor='black', alpha=0.7))
-    # Pole piece on magnet
-    ax2.add_patch(patches.Rectangle((-37.5, 25), 75, 15, facecolor='#95a5a6', edgecolor='black'))
-
-    # Voice coil & Former
-    ax2.add_patch(patches.Rectangle((-40, 10), 2, 35, facecolor='#f39c12', edgecolor='black'))
-    ax2.add_patch(patches.Rectangle((38, 10), 2, 35, facecolor='#f39c12', edgecolor='black'))
-
-    # Bumper clearance extension
-    ax2.add_patch(patches.Rectangle((-37.5, -40), 75, 40, facecolor='#bdc3c7', edgecolor='black', linestyle=':', label='Verdiepte Poolkern (50mm clearance)'))
+    # 4. Internal Clearance Chamber (50mm Bottom-Out Protection Zone)
+    # Highlight the ring cavity between x=37.5 and x=40, y=-35 to 15
+    ax.add_patch(patches.Rectangle((37.5, -35), 2.5, 50, facecolor='#3498db', alpha=0.3, hatch='//', label='50mm Inwaartse Speling (Inwendige Kamer)'))
+    ax.add_patch(patches.Rectangle((-40, -35), 2.5, 50, facecolor='#3498db', alpha=0.3, hatch='//'))
 
     # Annotations
-    ax2.annotate('Gefocuste Flux Gap', xy=(40, 32.5), xytext=(55, 45),
-                 arrowprops=dict(facecolor='black', shrink=0.05, width=1, headwidth=6), fontsize=9)
-    ax2.annotate('Extra 50mm Diepte\ntegen Bottom-Out', xy=(0, -20), xytext=(0, -35),
-                 arrowprops=dict(facecolor='blue', shrink=0.05, width=1, headwidth=6),
-                 ha='center', fontsize=9, color='blue')
+    ax.annotate('8mm Magnetische Luchtspleet (B = 0.99T)', xy=(38.2, 19), xytext=(60, 30),
+                 arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=6), fontsize=10, fontweight='bold')
 
-    ax2.set_xlim(-80, 80)
-    ax2.set_ylim(-45, 65)
-    ax2.set_aspect('equal')
-    ax2.grid(True, linestyle='--', alpha=0.5)
-    ax2.set_xlabel('Radius / Diameter (mm)')
+    ax.annotate('Inwendige Ringvormige Kamer (50mm Diep)\nSpreekspoel zak naar binnen zonder bodem te raken',
+                xy=(38.5, -15), xytext=(55, -15),
+                arrowprops=dict(facecolor='blue', shrink=0.05, width=1.5, headwidth=6),
+                fontsize=10, color='blue', fontweight='bold')
 
-    # Legend
-    handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='lower center', ncol=4, bbox_to_anchor=(0.5, 0.02))
+    ax.annotate('Xmax = +/- 15mm\n(Lineaire Uitslag)', xy=(38.5, 5), xytext=(-80, 5),
+                 arrowprops=dict(facecolor='red', shrink=0.05, width=1.5, headwidth=6),
+                 fontsize=10, color='red', fontweight='bold')
 
+    ax.set_xlim(-90, 110)
+    ax.set_ylim(-55, 65)
+    ax.set_aspect('equal')
+    ax.grid(True, linestyle='--', alpha=0.5)
+    ax.set_ylabel('Hoogte / Diepte (mm)', fontsize=11)
+    ax.set_xlabel('Radius t.o.v. Hartlijn (mm)', fontsize=11)
+
+    plt.legend(loc='upper right', bbox_to_anchor=(1.0, 0.98), fontsize=8)
     plt.tight_layout()
-    plt.subplots_adjust(bottom=0.18)
     plt.savefig('motor_ontwerpen_vergelijking.png', dpi=150)
-    print("Afbeelding gegenereerd: motor_ontwerpen_vergelijking.png")
+    print("Fysisch accurate doorsnede gegenereerd: motor_ontwerpen_vergelijking.png")
 
 if __name__ == '__main__':
-    draw_motor_designs()
+    draw_correct_motor_design()
