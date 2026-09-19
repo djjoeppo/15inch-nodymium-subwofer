@@ -28,6 +28,25 @@ def calculate_winding_specifications(wire_bare_mm=0.30, wire_outer_mm=0.34, wind
     cross_section_mm2 = math.pi * ((wire_bare_mm / 2.0) ** 2)
     resistance_single_strand = 0.0172 * total_wire_length_single_m / cross_section_mm2
 
+    # Thermal & Power handling estimations for 4 strands parallel (Quadfilar)
+    # Total copper volume & mass
+    num_strands = 4
+    total_copper_len_m = total_wire_length_single_m * num_strands
+    vol_copper_cm3 = (cross_section_mm2 / 100.0) * (total_copper_len_m * 100.0)
+    density_copper_g_cm3 = 8.96
+    mass_copper_g = vol_copper_cm3 * density_copper_g_cm3
+
+    # Surface area for heat dissipation (Inner & Outer surface of cylinder)
+    cyl_area_cm2 = 2 * (math.pi * (former_outer_dia_mm / 10.0) * (winding_height_mm / 10.0))
+
+    # Standard enamelled copper wire current density for short duration vs continuous airflow
+    # For aluminum former + forced air movement from movement (pole vent): ~8-12 A/mm2 continuous
+    total_cross_section_mm2 = cross_section_mm2 * num_strands
+    continuous_current_rms_a = total_cross_section_mm2 * 10.0 # ~10 A/mm2
+    re_quadfilar = resistance_single_strand / num_strands
+    p_rms_continuous = (continuous_current_rms_a ** 2) * re_quadfilar
+    p_music_peak = p_rms_continuous * 2.0
+
     return {
         'wire_bare_mm': wire_bare_mm,
         'wire_outer_mm': wire_outer_mm,
@@ -43,6 +62,10 @@ def calculate_winding_specifications(wire_bare_mm=0.30, wire_outer_mm=0.34, wind
         'res_4_parallel': round(resistance_single_strand / 4, 2),
         'res_6_parallel': round(resistance_single_strand / 6, 2),
         'res_8_parallel': round(resistance_single_strand / 8, 2),
+        'copper_mass_g': round(mass_copper_g, 1),
+        'surface_area_cm2': round(cyl_area_cm2, 1),
+        'p_rms_watts': round(p_rms_continuous),
+        'p_peak_watts': round(p_music_peak)
     }
 
 def print_summary():
@@ -66,6 +89,12 @@ def print_summary():
     print(f" - 4 draden parallel (Quadfilar): R_e = {spec['res_4_parallel']} Ohm  (Dual 2x 6.5 Ohm of single 3.3 Ohm)")
     print(f" - 6 draden parallel (Hexafilar): R_e = {spec['res_6_parallel']} Ohm  (Dual 2x 4.3 Ohm = 2.1 Ohm parallel)")
     print(f" - 8 draden parallel (Octafilar): R_e = {spec['res_8_parallel']} Ohm  (Dual 2x 3.2 Ohm = 1.6 Ohm parallel)")
+    print("--------------------------------------------------")
+    print("BELASTBAAR VERMOGEN (POWER HANDLING ESTIMATE):")
+    print(f" - Kopermassa spoel:          {spec['copper_mass_g']} gram")
+    print(f" - Koeloppervlakte spoel:     {spec['surface_area_cm2']} cm²")
+    print(f" - Continu Vermogen (RMS):    ~{spec['p_rms_watts']} Watt RMS")
+    print(f" - Miek/Muziek Vermogen (Peak): ~{spec['p_peak_watts']} Watt Peak")
     print("==================================================")
 
 if __name__ == '__main__':
