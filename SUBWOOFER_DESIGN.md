@@ -24,7 +24,7 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 - **50 mm Inwendige Kamer (Bottom-Out Bescherming):**
   - Binnenin de stalen cup bevindt zich een 50 mm diepe ringvormige sleuf.
   - Bij extreem grote inwaartse uitslag zakt de spreekspoeldrager in deze kamer weg **zonder ooit de bodem van de motor te raken**.
-  - **Effect op prestaties:** Magnetische flux ($B_g$) and $BL$-factor blijven 100% geoptimaliseerd, aangezien de magnetische luchtspleet zich uitsluitend bij de bovenste top plate ring en poolkern bevindt.
+  - **Effect op prestaties:** Magnetische flux ($B_g$) en $BL$-factor blijven 100% geoptimaliseerd, aangezien de magnetische luchtspleet zich uitsluitend bij de bovenste top plate ring en poolkern bevindt.
 
 ---
 
@@ -65,7 +65,7 @@ Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te v
 - **Vervormingsmechanisme:** Bij een maximale uitslag van ±50 mm bedraagt de gestrekte lineaire afstand tussen conus- en basketrand slechts **61.0 mm** ($\sqrt{35^2 + 50^2}$).
   - Doordat de onbelaste booglengte (134.6 mm) ruim groter is dan de gestrekte afstand (61.0 mm), hoeft het TPU materiaal **niet plastisch te strekken**.
   - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
-  - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU liegt (TPU verdraagt >400% rek zonder blijvende vervorming).
+  - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
 
 #### B. 100% Supportloze Printbaarheid & Verticale Printoriëntatie
 Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maximale laaghechtingssterkte, is het gebruik van (tree) supports **ongeschikt** doordat TPU sterk aan supportmateriaal fused.
@@ -113,7 +113,7 @@ Om te voorkomen dat een flexibel TPU onderdeel van ~135 mm hoog gaat wankelen do
 
 ### 5.2 TPU Spider (Ophanging / Centreerspin)
 - **Vorm:** Progressieve golving (concentrische ringen) om stijfheid te bieden rond de spreekspoel en flexibiliteit in het horizontale vlak.
-- **Centrering:** Houdt de 3" spreekspoel drain exact in het midden van de luchtspleet van 8 mm.
+- **Centrering:** Houdt de 3" spreekspoel exact in het midden van de luchtspleet van 8 mm.
 
 ---
 
@@ -143,3 +143,27 @@ In de repository is een universeel CAD-script aanwezig (`generate_surround_freec
 - **Gegenereerde CAD & 3D-Print Bestanden:**
   - `tpu_surround_segment_100mm_p2p.step` (Universeel STEP CAD-model, direct te openen in **Autodesk Fusion 360** of **FreeCAD**).
   - `tpu_surround_segment_100mm_p2p.stl` (STL mesh bestand, direct te importeren in **Bambu Studio**, **OrcaSlicer** of **PrusaSlicer**).
+  - `tpu_surround_test_slice_20mm.stl` (15-Minuten TPU Proef-Print Slice).
+
+---
+
+## 9. Risicoloos Testen: 15-Minuten TPU Proef-Print & Exacte Slicer Instellingen
+
+Om **100% zekerheid** te krijgen over de printbaarheid, flexibiliteit en naadsterkte voordat je een volledig segment geprint wordt, is een **15-Minuten Proef-Print Slice** aanwezig (`tpu_surround_test_slice_20mm.stl`).
+
+### 9.1 Slicer Instellingen voor TPU (Bambu Studio / OrcaSlicer / PrusaSlicer)
+- **Nozzle Temperatuur:** `245°C - 250°C` (voor maximale laaghechtingssterkte).
+- **Bed Temperatuur:** `45°C - 50°C` op een Textured PEI plaat.
+- **Max Volumetric Speed Limit:** `3.5 mm³/s` (Houdt de printkop op een rustige ~25 tot 35 mm/s snelheid).
+- **Wall Loops / Perimeters:** `2` (Exact 0.8 - 0.9 mm wanddikte bij een 0.4 mm nozzle).
+- **Cooling Fan:** `20% - 30%` (Lage koeling voorkomt broze naden en fused de laadlagen monolithisch).
+- **Supports:** `0% (Disabled)` -> Geen supports nodig!
+- **Brim:** `Outer Brim Only = 10 mm` (Gegarandeerde hechting op de bouwplaat).
+
+### 9.2 Proef-Print Test-Protocol (12 Min Printtijd, 3 gram TPU)
+1. **Laad `tpu_surround_test_slice_20mm.stl` in je slicer.**
+2. **Print de 20mm slice met de bovenstaande instellingen.**
+3. **Voer de 3 Eenvoudige Kwaliteitstesten uit:**
+   - **Test 1 (Flexibiliteit):** Buig de test-slice 180° dubbel. De rol hoort soepel mee te veren en direct terug te veren.
+   - **Test 2 (Laagsterkte):** Probeer de lagen met de hand van elkaar te trekken. Bij 245°C is de laaghechting onverwoestbaar.
+   - **Test 3 (Lijmnaad):** Breng een drup CA-lijm aan op de 12mm Lap Joint flap. Druk 15 seconden aan. Probeer de verbinding na 2 minuten los te trekken om de naadsterkte te verifiëren.
