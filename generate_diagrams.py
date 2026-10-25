@@ -82,17 +82,17 @@ def draw_correct_motor_design():
 
 def draw_surround_design_and_segmentation():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
-    fig.suptitle('TPU Surround Ontwerp voor 100mm Peak-to-Peak (±50mm) Uitslag op 256x256mm Bed', fontsize=14, fontweight='bold')
+    fig.suptitle('TPU Surround Ontwerp voor 100mm Peak-to-Peak (±50mm) Uitslag (100% Supportless)', fontsize=14, fontweight='bold')
 
     # Subplot 1: Doorsnede en Profiel bij 0mm, +50mm en -50mm uitslag
-    ax1.set_title('High-Roll TPU Surround Profiel Vervorming', fontsize=12, fontweight='bold')
+    ax1.set_title('Angled High-Roll TPU Profiel (45° Supportless Wand)', fontsize=12, fontweight='bold')
 
     # Parameters: Inner flange at r=157.5mm (Cone edge), Outer flange at r=192.5mm (Basket rim)
     # Radial width w = 35mm. High-Roll height h = 25mm.
     r_cone = 157.5
     r_basket = 192.5
 
-    # 1. Rustpositie (0 mm uitslag) - Semi-ellips
+    # 1. Rustpositie (0 mm uitslag) - Trapezoid / Angled semi-ellips met max 45 deg hoek
     theta = np.linspace(0, np.pi, 100)
     r_roll_0 = r_cone + 17.5 * (1 - np.cos(theta))
     z_roll_0 = 25.0 * np.sin(theta)
@@ -109,10 +109,7 @@ def draw_surround_design_and_segmentation():
              'b-', linewidth=3, label='Ruststand (0 mm uitslag)')
 
     # 2. Uitwaartse Uitslag (+50 mm)
-    # Membraan stijgt naar z = +50 mm
     z_flange_inner_out = np.full_like(r_flange_inner, 50.0)
-    # Profiel rekt/rolt mee van (157.5, 50) naar (192.5, 0)
-    # Semi-ellips vervormd
     z_roll_out = 50.0 * (1 - theta / np.pi) + 18.0 * np.sin(theta)
 
     ax1.plot(np.concatenate([r_flange_inner, r_roll_0, r_flange_outer]),
@@ -135,9 +132,10 @@ def draw_surround_design_and_segmentation():
                  arrowprops=dict(facecolor='red', shrink=0.05, width=2, headwidth=7),
                  fontsize=10, color='darkred', fontweight='bold')
 
-    ax1.annotate('High-Roll Boog\n(35mm Breed, 25mm Hoog)', xy=(175, 25), xytext=(160, 45),
-                 arrowprops=dict(facecolor='blue', shrink=0.05, width=1.5, headwidth=6),
-                 fontsize=9, color='blue', fontweight='bold')
+    ax1.annotate('Max Overhang ≤ 45°\n100% Supportloos Geprint!', xy=(166, 17), xytext=(120, 38),
+                 arrowprops=dict(facecolor='green', shrink=0.05, width=2, headwidth=7),
+                 fontsize=10, color='darkgreen', fontweight='bold',
+                 bbox=dict(boxstyle='round,pad=0.3', facecolor='#e8f8f5', edgecolor='green'))
 
     ax1.set_xlabel('Radius r (mm)', fontsize=11)
     ax1.set_ylabel('Verticale Positie z (mm)', fontsize=11)
@@ -148,39 +146,33 @@ def draw_surround_design_and_segmentation():
 
 
     # Subplot 2: Segmentering op 256x256 mm Printbed
-    ax2.set_title('Printbed Layout: 60° Segment op 256×256 mm Bed', fontsize=12, fontweight='bold')
+    ax2.set_title('Printbed Layout: Supportloos (Plat of Verticaal)', fontsize=12, fontweight='bold')
 
     # Draw 256x256 printbed
     ax2.add_patch(patches.Rectangle((-128, -128), 256, 256, facecolor='#f8f9fa', edgecolor='black', linewidth=2, label='Printbed (256x256 mm)'))
 
-    # Draw 1 Segment of Surround (60 degrees, r_in = 147.5mm, r_out = 202.5mm)
-    # Center segment inside bed
-    # Rotate segment so it fits diagonally/centered
+    # Draw 1 Segment of Surround
     r_in = 147.5
     r_out = 202.5
     angles = np.linspace(-30, 30, 50)
 
-    # Outer arc
-    x_outer = r_out * np.cos(np.radians(angles)) - 150.0  # shifted to center on bed
+    x_outer = r_out * np.cos(np.radians(angles)) - 150.0
     y_outer = r_out * np.sin(np.radians(angles))
 
-    # Inner arc
     x_inner = r_in * np.cos(np.radians(angles)) - 150.0
     y_inner = r_in * np.sin(np.radians(angles))
 
-    # Segment polygon
     x_seg = np.concatenate([x_outer, x_inner[::-1]])
     y_seg = np.concatenate([y_outer, y_inner[::-1]])
 
     ax2.fill(x_seg, y_seg, color='#2980b9', alpha=0.6, edgecolor='blue', linewidth=1.5, label='TPU Surround Segment (1/6e)')
 
-    # Draw overlapping lap joint flaps (+12mm extension at both angular edges)
     ax2.annotate('12mm Overlappende\nLijmflap (Lap Joint)', xy=(x_outer[0], y_outer[0]), xytext=(x_outer[0]+10, y_outer[0]-25),
                  arrowprops=dict(facecolor='green', shrink=0.05, width=1.5, headwidth=6),
                  fontsize=9, color='darkgreen', fontweight='bold')
 
-    ax2.text(0, -115, 'Maximale Afmeting Segment: ~204.5 mm\nPast 100% Binnen 256x256 mm Printbed',
-             fontsize=10, fontweight='bold', color='black', ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.5))
+    ax2.text(0, -115, 'GEEN Tree Supports Nodig!\n1. Plat: 45° Angled Profiel\n2. Verticaal: Rechtop op Snijvlak (90° Laagopbouw)',
+             fontsize=9, fontweight='bold', color='black', ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='#d4efdf', edgecolor='green', alpha=0.9))
 
     ax2.set_xlim(-135, 135)
     ax2.set_ylim(-135, 135)

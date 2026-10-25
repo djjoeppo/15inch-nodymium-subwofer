@@ -24,7 +24,7 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 - **50 mm Inwendige Kamer (Bottom-Out Bescherming):**
   - Binnenin de stalen cup bevindt zich een 50 mm diepe ringvormige sleuf.
   - Bij extreem grote inwaartse uitslag zakt de spreekspoeldrager in deze kamer weg **zonder ooit de bodem van de motor te raken**.
-  - **Effect op prestaties:** Magnetische flux ($B_g$) en $BL$-factor blijven 100% geoptimaliseerd, aangezien de magnetische luchtspleet zich uitsluitend bij de bovenste top plate ring en poolkern bevindt.
+  - **Effect op prestaties:** Magnetische flux ($B_g$) and $BL$-factor blijven 100% geoptimaliseerd, aangezien de magnetische luchtspleet zich uitsluitend bij de bovenste top plate ring en poolkern bevindt.
 
 ---
 
@@ -58,7 +58,7 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te vangen zonder dat de rubberen rand scheurt, knikt of de conus blokkeert, is een **geoptimaliseerd High-Roll TPU profiel** ontworpen.
 
 #### A. Geometrisch Profiel & Mechanica
-- **Profiel Vorm:** **High-Roll Semi-Ellips**.
+- **Profiel Vorm:** **High-Roll Semi-Ellips / Angled High-Roll**.
 - **Radiale Breedte ($w$):** **35 mm** (tussen conus buitenrand $\varnothing 315 \text{ mm}$ en basket binnenrand $\varnothing 385 \text{ mm}$).
 - **Onbelaste Rolhoogte ($h$):** **25 mm**.
 - **Onbelaste Booglengte:** **~134.6 mm**.
@@ -67,18 +67,33 @@ Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te v
   - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
   - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
 
-#### B. Materiaal & Printinstellingen
-- **Materiaal:** **TPU (Shore 85A aanbevolen)** voor maximale flexibiliteit en lage $F_s$ (resonantiefrequentie); Shore 95A is tevens bruikbaar bij een dunnere wanddikte.
+#### B. 100% Supportloze Printbaarheid (Geen Tree Supports Nodig!)
+Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maximale laagfusiestrekte, is het gebruik van (tree) supports **ongeschikt** doordat TPU sterk aan supportmateriaal fused en het verwijderen ervan de 0.8 mm dunne wand kan beschadigen. Daarom is het TPU surround ontworpen voor **100% supportloos printen**:
+
+1. **Optie 1: Plat Printen op het Bed (Angled High-Roll Profile)**
+   - De wanden van de rol stijgen op onder een hoek van **≤ 45°** t.o.v. het printbed.
+   - Iedere FDM 3D-printer kan TPU onder 45° overhang strak en vlekkeloos printen zonder enige ondersteuning.
+   - De bovenzijde heeft een zachte afronding die door bruggen/gecontroleerde oversteken wordt opgevangen.
+
+2. **Optie 2: Verticale Print-oriëntatie (Rechtop op de 60° Snijrand)**
+   - Het 60° segment wordt **rechtop** geprint, rustend op het platte zijsnijvlak op de bouwplaat.
+   - Hierdoor veranderen alle radiale bogen in **verticale wanden (90° t.o.v. de bouwplaat)**!
+   - Er is nul overhang aanwezig in de rol-zone; de lagen stapelen zich exact horizontaal op met maximale laaghechting en 0% supportmateriaal.
+   - Gebruik een 10mm brim of kleine hecht-tab op de montageflens voor stabiliteit op het printbed.
+
+#### C. Materiaal & Printinstellingen
+- **Materiaal:** **TPU (Shore 85A aanbevolen)** voor maximale flexibiliteit en lage $F_s$ (resonantiefrequentie); Shore 95A is tevens bruikbaar.
+- **Printtemperatuur:** **245°C - 255°C** (voor 100% moleculaire laagfusiestrekte).
 - **Wanddikte:** **0.8 mm tot 1.0 mm** (exact 2 perimeters bij een 0.4 mm nozzle).
-- **Top/Bottom Layers:** 0 lagen in de rol-zone voor maximale buigsaamheid.
+- **Supports:** **0% (Disabled / Uitgeschakeld)**.
 - **Flenzen:** 100% infill op de binnenste en buitenste montageflenzen (12-15 mm breed) voor een luchtdichte en stevige klem/lijmverbinding.
 
-#### C. Printbed Segmentatie (256×256 mm Bed)
+#### D. Printbed Segmentatie (256×256 mm Bed)
 - **Aantal Segmenten:** **6 symmetrische segmenten van 60°**.
 - **Maximale Span per Segment:** **~204.5 mm** (inclusief 12 mm overlappende lijmflappen).
 - **Inpassing:** Past gemakkelijk diagonaal en gecentreerd op een **256×256 mm printbed** (zoals Bambu Lab X1/P1/A1 of Creality K1).
 
-#### D. Montage & Verlijmingshandleiding (Lap Joint Method)
+#### E. Montage & Verlijmingshandleiding (Lap Joint Method)
 1. **Lijmflappen (Lap Joints):** Elk van de 6 segmenten is voorzien van een 12 mm overlappende rand (lap joint) aan de hoekuiteinden.
 2. **Lijmkeuze:** Cyanoacrylaat (CA-lijm / Secondelijm) gecombineerd met een **TPU/Polyurethaan Activator/Primer**, óf elastische Polyurethaan contactlijm (bijv. Seam Grip / Stormsure).
 3. **Voorbehandeling:** Schuur de contactoppervlakken licht op met p400 schuurpapier en ontvet grondig met isopropanol (IPA).
