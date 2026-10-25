@@ -92,7 +92,7 @@ def draw_surround_design_and_segmentation():
     r_cone = 157.5
     r_basket = 192.5
 
-    # 1. Rustpositie (0 mm uitslag) - Trapezoid / Angled semi-ellips met max 45 deg hoek
+    # 1. Rustpositie (0 mm uitslag)
     theta = np.linspace(0, np.pi, 100)
     r_roll_0 = r_cone + 17.5 * (1 - np.cos(theta))
     z_roll_0 = 25.0 * np.sin(theta)
@@ -145,42 +145,53 @@ def draw_surround_design_and_segmentation():
     ax1.legend(loc='lower left', fontsize=8)
 
 
-    # Subplot 2: Segmentering op 256x256 mm Printbed
-    ax2.set_title('Printbed Layout: Supportloos (Plat of Verticaal)', fontsize=12, fontweight='bold')
+    # Subplot 2: Vertical Print Orientation & Sacrificial Bracing Ribs
+    ax2.set_title('Verticale Print-Oriëntatie (Rechtop op Snijvlak)', fontsize=12, fontweight='bold')
 
-    # Draw 256x256 printbed
-    ax2.add_patch(patches.Rectangle((-128, -128), 256, 256, facecolor='#f8f9fa', edgecolor='black', linewidth=2, label='Printbed (256x256 mm)'))
+    # Draw Printbed surface (Z=0 line)
+    ax2.plot([-80, 80], [0, 0], 'k-', linewidth=4, label='Printbed Oppervlak')
+    ax2.add_patch(patches.Rectangle((-80, -10), 160, 10, facecolor='#d5dbdb', edgecolor='black'))
 
-    # Draw 1 Segment of Surround
-    r_in = 147.5
-    r_out = 202.5
-    angles = np.linspace(-30, 30, 50)
+    # Vertical Roll segment standing upright (0 to 134.6mm high)
+    # Profile curve standing up
+    y_vert = np.linspace(0, 135, 100)
+    x_outer_vert = 25.0 * np.sin(np.pi * y_vert / 135.0) + 15.0
+    x_inner_vert = x_outer_vert - 1.0  # 1.0mm wall
 
-    x_outer = r_out * np.cos(np.radians(angles)) - 150.0
-    y_outer = r_out * np.sin(np.radians(angles))
+    ax2.plot(x_outer_vert, y_vert, 'b-', linewidth=2.5, label='TPU Rolwand (0.8-1.0mm)')
+    ax2.plot(x_inner_vert, y_vert, 'b-', linewidth=2.5)
+    ax2.fill_betweenx(y_vert, x_inner_vert, x_outer_vert, color='#2980b9', alpha=0.6)
 
-    x_inner = r_in * np.cos(np.radians(angles)) - 150.0
-    y_inner = r_in * np.sin(np.radians(angles))
+    # Sacrificial 0.4mm Bracing Ribs (Driehoeks-vakwerk in holte)
+    # Rib 1: y=0 to y=45
+    ax2.plot([0, x_inner_vert[33]], [0, y_vert[33]], 'r--', linewidth=1.5, label='0.4mm Sacrificiële Stabilisatierib (Wegsnijdbaar)')
+    # Rib 2: y=45 to y=90
+    ax2.plot([0, x_inner_vert[66]], [45, y_vert[66]], 'r--', linewidth=1.5)
+    # Rib 3: y=90 to y=135
+    ax2.plot([0, x_inner_vert[99]], [90, y_vert[99]], 'r--', linewidth=1.5)
 
-    x_seg = np.concatenate([x_outer, x_inner[::-1]])
-    y_seg = np.concatenate([y_outer, y_inner[::-1]])
+    # 10mm Outer Brim
+    ax2.add_patch(patches.Rectangle((-15, 0), 15, 1.2, facecolor='#e74c3c', alpha=0.7, label='10mm Outer Brim (Bed Adhesie)'))
+    ax2.add_patch(patches.Rectangle((x_outer_vert[0], 0), 15, 1.2, facecolor='#e74c3c', alpha=0.7))
 
-    ax2.fill(x_seg, y_seg, color='#2980b9', alpha=0.6, edgecolor='blue', linewidth=1.5, label='TPU Surround Segment (1/6e)')
+    ax2.annotate('90° Laagopbouw!\nLagen evenwijdig aan buiging,\nVOORKOMT SCHEUREN op laagnaad',
+                xy=(x_outer_vert[50], 67.5), xytext=(x_outer_vert[50]+15, 80),
+                arrowprops=dict(facecolor='blue', shrink=0.05, width=1.5, headwidth=6),
+                fontsize=9, color='darkblue', fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='#ebf5fb', edgecolor='blue'))
 
-    ax2.annotate('12mm Overlappende\nLijmflap (Lap Joint)', xy=(x_outer[0], y_outer[0]), xytext=(x_outer[0]+10, y_outer[0]-25),
-                 arrowprops=dict(facecolor='green', shrink=0.05, width=1.5, headwidth=6),
-                 fontsize=9, color='darkgreen', fontweight='bold')
+    ax2.annotate('Sacrificiële Ribben (0.4mm)\nVoorkomt "TPU Wobble"\nSimpel weg te snijden met scalpel',
+                xy=(10, 45), xytext=(-70, 45),
+                arrowprops=dict(facecolor='red', shrink=0.05, width=1.5, headwidth=6),
+                fontsize=9, color='darkred', fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='#fadbd8', edgecolor='red'))
 
-    ax2.text(0, -115, 'GEEN Tree Supports Nodig!\n1. Plat: 45° Angled Profiel\n2. Verticaal: Rechtop op Snijvlak (90° Laagopbouw)',
-             fontsize=9, fontweight='bold', color='black', ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='#d4efdf', edgecolor='green', alpha=0.9))
-
-    ax2.set_xlim(-135, 135)
-    ax2.set_ylim(-135, 135)
-    ax2.set_aspect('equal')
+    ax2.set_xlim(-85, 85)
+    ax2.set_ylim(-15, 150)
+    ax2.set_xlabel('Transversale Breedte (mm)', fontsize=11)
+    ax2.set_ylabel('Printhoogte Z-as (mm)', fontsize=11)
     ax2.grid(True, linestyle='--', alpha=0.5)
-    ax2.set_xlabel('X (mm)', fontsize=11)
-    ax2.set_ylabel('Y (mm)', fontsize=11)
-    ax2.legend(loc='upper left', fontsize=8)
+    ax2.legend(loc='upper right', fontsize=8)
 
     plt.tight_layout()
     plt.savefig('surround_ontwerp_en_segmentatie.png', dpi=150)

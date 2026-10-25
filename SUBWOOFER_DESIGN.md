@@ -67,25 +67,32 @@ Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te v
   - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
   - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
 
-#### B. 100% Supportloze Printbaarheid (Geen Tree Supports Nodig!)
-Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maximale laagfusiestrekte, is het gebruik van (tree) supports **ongeschikt** doordat TPU sterk aan supportmateriaal fused en het verwijderen ervan de 0.8 mm dunne wand kan beschadigen. Daarom is het TPU surround ontworpen voor **100% supportloos printen**:
+#### B. 100% Supportloze Printbaarheid & Verticale Printoriëntatie
+Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maximale laaghechtingssterkte, is het gebruik van (tree) supports **ongeschikt** doordat TPU sterk aan supportmateriaal fused.
 
-1. **Optie 1: Plat Printen op het Bed (Angled High-Roll Profile)**
-   - De wanden van de rol stijgen op onder een hoek van **≤ 45°** t.o.v. het printbed.
-   - Iedere FDM 3D-printer kan TPU onder 45° overhang strak en vlekkeloos printen zonder enige ondersteuning.
-   - De bovenzijde heeft een zachte afronding die door bruggen/gecontroleerde oversteken wordt opgevangen.
+**Mechanisch Voordeel van Verticale Print-Oriëntatie (Rechtop op Snijvlak):**
+1. **Minst Mogelijk Risico op Scheuren in de Rol:**
+   - Wanneer de 60° segmenten **verticaal rechtop** worden geprint (rustend op de vlakke zijsnijrand), lopen de printlagen **parallel aan de buiglijn**.
+   - Bij de extreme uitslag van ±50 mm buigt het materiaal *in de lengterichting van de geprinte spoorlijnen*.
+   - Hierdoor worden de laagnaad-interfaces (inter-layer bonds) niet op trek beland, wat **delaminatie of scheuren langs de printlagen 100% uitsluit**!
+2. **Dynamische Bogen:**
+   - Doordat de printkop per laag continue cirkelbogen verwerkt op 245°C - 255°C, ontstaat een extreem glad, rimpelloos en 100% luchtdicht oppervlak.
 
-2. **Optie 2: Verticale Print-oriëntatie (Rechtop op de 60° Snijrand)**
-   - Het 60° segment wordt **rechtop** geprint, rustend op het platte zijsnijvlak op de bouwplaat.
-   - Hierdoor veranderen alle radiale bogen in **verticale wanden (90° t.o.v. de bouwplaat)**!
-   - Er is nul overhang aanwezig in de rol-zone; de lagen stapelen zich exact horizontaal op met maximale laaghechting en 0% supportmateriaal.
-   - Gebruik een 10mm brim of kleine hecht-tab op de montageflens voor stabiliteit op het printbed.
+**Oplossing voor Print-Stabiliteit ("Tall TPU Wobble"):**
+Om te voorkomen dat een flexibel TPU onderdeel van ~135 mm hoog gaat wankelen door de bewegingen van de printkop:
+- **0.4 mm Sacrificiële Verstevigingsribben (Sacrificial Bracing Ribs):**
+  - In de holte onder de rolboog zijn dunne **0.4 mm (1 perimeter)** driehoeks-verstevigingsribben geïntegreerd in het model.
+  - Deze ribben maken het onderdeel tijdens het printen zo stijf als een vakwerkconstructie.
+  - Na het printen snijd je deze dunne 0.4 mm vliezen met een scherp scalpel of hobbymesje in één soepele beweging weg.
+- **10 mm Outer Brim:**
+  - De 12 mm brede montageflens aan de onderzijde wordt voorzien van een 10 mm brede buitenbrim voor onwrikbare hechting op het PEI-printbed.
 
 #### C. Materiaal & Printinstellingen
 - **Materiaal:** **TPU (Shore 85A aanbevolen)** voor maximale flexibiliteit en lage $F_s$ (resonantiefrequentie); Shore 95A is tevens bruikbaar.
 - **Printtemperatuur:** **245°C - 255°C** (voor 100% moleculaire laagfusiestrekte).
 - **Wanddikte:** **0.8 mm tot 1.0 mm** (exact 2 perimeters bij een 0.4 mm nozzle).
 - **Supports:** **0% (Disabled / Uitgeschakeld)**.
+- **Stabilisatie:** 0.4 mm sacrificiële ribben + 10 mm outer brim.
 - **Flenzen:** 100% infill op de binnenste en buitenste montageflenzen (12-15 mm breed) voor een luchtdichte en stevige klem/lijmverbinding.
 
 #### D. Printbed Segmentatie (256×256 mm Bed)
@@ -120,4 +127,4 @@ Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maxima
 
 ## 7. Schematische Overzichten & Visualisaties
 1. **Motor Doorsnede:** Zie `motor_ontwerpen_vergelijking.png` voor de fysisch accurate doorsnede van de neodymium pot-motor inclusief de inwendige 50 mm ringvormige speling kamer.
-2. **Surround & Printbed Layout:** Zie `surround_ontwerp_en_segmentatie.png` voor de profielvervorming van de High-Roll TPU surround bij ±50 mm uitslag en de inpassing van een 60° segment op een 256×256 mm printbed.
+2. **Surround & Printbed Layout:** Zie `surround_ontwerp_en_segmentatie.png` voor de profielvervorming van de High-Roll TPU surround bij ±50 mm uitslag en de verticale print-oriëntatie met 0.4 mm sacrificiële ribben.

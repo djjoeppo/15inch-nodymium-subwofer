@@ -43,9 +43,13 @@ def calculate_surround_parameters(x_mech_p2p_mm=100.0, outer_dia_mm=385.0, cone_
     max_segment_span_mm = chord_length_mm + 12.0  # ~204.5 mm
 
     # Supportless print parameters:
-    # 45-degree trapezoidal / angled high-roll slope angle relative to bed: 45.0 degrees
     max_overhang_angle_deg = 45.0
     supports_needed = False
+
+    # Vertical print specs (Standing on 60-degree cut face):
+    vertical_print_height_mm = round(arc_length_mm, 1)  # ~134.6 mm
+    sacrificial_rib_thickness_mm = 0.4  # 1 perimeter removable rib
+    brim_width_mm = 10.0
 
     return {
         'x_mech_p2p_mm': x_mech_p2p_mm,
@@ -59,7 +63,10 @@ def calculate_surround_parameters(x_mech_p2p_mm=100.0, outer_dia_mm=385.0, cone_
         'max_segment_span_mm': round(max_segment_span_mm, 1),
         'fits_256_bed': max_segment_span_mm <= 256.0,
         'max_overhang_angle_deg': max_overhang_angle_deg,
-        'supports_needed': supports_needed
+        'supports_needed': supports_needed,
+        'vertical_print_height_mm': vertical_print_height_mm,
+        'sacrificial_rib_thickness_mm': sacrificial_rib_thickness_mm,
+        'brim_width_mm': brim_width_mm
     }
 
 def calculate_motor_parameters(h_gap_mm, h_vc_mm, clearance_mm, magnet_dia_mm, magnet_thick_mm):
@@ -116,6 +123,7 @@ def print_summary():
     print(f" - Maximale Materiaalrek:       {surround['max_strain_pct']}% (Veilig binnen TPU elastische grens)")
     print(f" - Wanddikte & Materiaal:        0.8 - 1.0 mm (TPU 85A aanbevolen / Shore 95A)")
     print(f" - Support-Loos Printbaar:       JA (Max overhang {surround['max_overhang_angle_deg']}° - Geen tree supports nodig!)")
+    print(f" - Verticale Print-Oriëntatie:   JA (Rechtop {surround['vertical_print_height_mm']}mm hoog, {surround['sacrificial_rib_thickness_mm']}mm sacrificiële ribben, {surround['brim_width_mm']}mm brim)")
     print(f" - Printbed Segmentatie:        {surround['num_segments']} segmenten van 60° (Max span: {surround['max_segment_span_mm']} mm)")
     print(f" - Past op 256x256 Bed:          {'JA' if surround['fits_256_bed'] else 'NEE'}")
     print("--------------------------------------------------")
