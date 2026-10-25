@@ -65,7 +65,7 @@ Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te v
 - **Vervormingsmechanisme:** Bij een maximale uitslag van ±50 mm bedraagt de gestrekte lineaire afstand tussen conus- en basketrand slechts **61.0 mm** ($\sqrt{35^2 + 50^2}$).
   - Doordat de onbelaste booglengte (134.6 mm) ruim groter is dan de gestrekte afstand (61.0 mm), hoeft het TPU materiaal **niet plastisch te strekken**.
   - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
-  - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
+  - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU liegt (TPU verdraagt >400% rek zonder blijvende vervorming).
 
 #### B. 100% Supportloze Printbaarheid & Verticale Printoriëntatie
 Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maximale laaghechtingssterkte, is het gebruik van (tree) supports **ongeschikt** doordat TPU sterk aan supportmateriaal fused.
@@ -113,7 +113,7 @@ Om te voorkomen dat een flexibel TPU onderdeel van ~135 mm hoog gaat wankelen do
 
 ### 5.2 TPU Spider (Ophanging / Centreerspin)
 - **Vorm:** Progressieve golving (concentrische ringen) om stijfheid te bieden rond de spreekspoel en flexibiliteit in het horizontale vlak.
-- **Centrering:** Houdt de 3" spreekspoel exact in het midden van de luchtspleet van 8 mm.
+- **Centrering:** Houdt de 3" spreekspoel drain exact in het midden van de luchtspleet van 8 mm.
 
 ---
 
@@ -128,3 +128,18 @@ Om te voorkomen dat een flexibel TPU onderdeel van ~135 mm hoog gaat wankelen do
 ## 7. Schematische Overzichten & Visualisaties
 1. **Motor Doorsnede:** Zie `motor_ontwerpen_vergelijking.png` voor de fysisch accurate doorsnede van de neodymium pot-motor inclusief de inwendige 50 mm ringvormige speling kamer.
 2. **Surround & Printbed Layout:** Zie `surround_ontwerp_en_segmentatie.png` voor de profielvervorming van de High-Roll TPU surround bij ±50 mm uitslag en de verticale print-oriëntatie met 0.4 mm sacrificiële ribben.
+
+---
+
+## 8. Automatisering & CAD-Generatie (FreeCAD & CadQuery Script)
+In de repository is een universeel CAD-script aanwezig (`generate_surround_freecad.py`) waarmee direct 3D-bestanden worden gegenereerd:
+
+- **Uitvoeren via Standalone Python (met CadQuery):**
+  ```bash
+  python3 generate_surround_freecad.py
+  ```
+- **Uitvoeren in FreeCAD GUI / Macro Editor:**
+  Open FreeCAD, open de **Macro Editor** (of Python Console) en voer de inhoud van `generate_surround_freecad.py` uit. De ingebouwde native FreeCAD-functie (`import FreeCAD, Part`) bouwt het 3D-model direct op in de FreeCAD 3D-viewer!
+- **Gegenereerde CAD & 3D-Print Bestanden:**
+  - `tpu_surround_segment_100mm_p2p.step` (Universeel STEP CAD-model, direct te openen in **Autodesk Fusion 360** of **FreeCAD**).
+  - `tpu_surround_segment_100mm_p2p.stl` (STL mesh bestand, direct te importeren in **Bambu Studio**, **OrcaSlicer** of **PrusaSlicer**).
