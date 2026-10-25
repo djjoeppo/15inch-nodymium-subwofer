@@ -1,7 +1,7 @@
-# Ontwerpspecificatie: 15-inch 3D-Geprinte Subwoofer met Neodymium Motor
+# Ontwerpspecificatie: 15-inch 3D-Geprinte Subwoofer met Neodymium Motor & 100mm P2P Surround
 
 ## 1. Projectoverzicht en Doelstellingen
-Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen voor een hoogwaardige 15-inch (381 mm) 3D-geprinte subwoofer. Het doel is een geoptimaliseerd, modulair en robuust luidsprekersysteem te bouwen op basis van een custom neodymium magneetmotor, TPU-ophanging en een modulair frame geschikt voor standaard FDM 3D-printers.
+Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen voor een hoogwaardige 15-inch (381 mm) 3D-geprinte subwoofer. Het doel is een geoptimaliseerd, modulair en robuust luidsprekersysteem te bouwen op basis van een custom neodymium magneetmotor, TPU-ophanging geschikt voor extreme mechanische uitslagen tot **100 mm Peak-to-Peak (±50 mm)**, en een modulair frame geschikt voor standaard FDM 3D-printers met een printbed van **256×256×256 mm**.
 
 ---
 
@@ -44,7 +44,7 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 
 ### 4.1 Opsplitsing voor 256×256×256 mm Printbed
 - De buitendiameter van een 15" luidspreker bedraagt ca. 385 mm.
-- De basket wordt opgedeeld in **6 symmetrische segmenten**.
+- De basket wordt opgedeeld in **6 symmetrische segmenten van 60°**.
 - **Verbindingsmethode:**
   - **M4/M5 Stalen Draadeinden:** Lopen over de volle lengte door de basket-spaken om de constructie onder constante voorspanning te houden.
   - **Pen-en-Gat Uitlijning (Alignment Dowels):** Zorgen voor een exacte positionering en voorkomen afschuiving.
@@ -52,12 +52,42 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 
 ---
 
-## 5. TPU Spider en Surround Specificaties
+## 5. TPU Spider en Extreme 100mm P2P Surround Specificaties
 
-### 5.1 TPU Surround (Randschuim/Rubber vervanging)
-- **Materiaal:** TPU (Shore 85A of 95A).
-- **Vorm:** Meervoudige rol / dubbele rol (roll-geometry) voor lineaire veerkarakteristiek bij uitslagen tot $\pm 20 \text{ mm}$.
-- **Wanddikte:** 0.8 mm tot 1.2 mm (2 tot 3 perimeters).
+### 5.1 TPU Surround Ontwerp (100 mm Peak-to-Peak / ±50 mm $X_{mech}$)
+Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te vangen zonder dat de rubberen rand scheurt, knikt of de conus blokkeert, is een **geoptimaliseerd High-Roll TPU profiel** ontworpen.
+
+#### A. Geometrisch Profiel & Mechanica
+- **Profiel Vorm:** **High-Roll Semi-Ellips**.
+- **Radiale Breedte ($w$):** **35 mm** (tussen conus buitenrand $\varnothing 315 \text{ mm}$ en basket binnenrand $\varnothing 385 \text{ mm}$).
+- **Onbelaste Rolhoogte ($h$):** **25 mm**.
+- **Onbelaste Booglengte:** **~134.6 mm**.
+- **Vervormingsmechanisme:** Bij een maximale uitslag van ±50 mm bedraagt de gestrekte lineaire afstand tussen conus- en basketrand slechts **61.0 mm** ($\sqrt{35^2 + 50^2}$).
+  - Doordat de onbelaste booglengte (134.6 mm) ruim groter is dan de gestrekte afstand (61.0 mm), hoeft het TPU materiaal **niet plastisch te strekken**.
+  - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
+  - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
+
+#### B. Materiaal & Printinstellingen
+- **Materiaal:** **TPU (Shore 85A aanbevolen)** voor maximale flexibiliteit en lage $F_s$ (resonantiefrequentie); Shore 95A is tevens bruikbaar bij een dunnere wanddikte.
+- **Wanddikte:** **0.8 mm tot 1.0 mm** (exact 2 perimeters bij een 0.4 mm nozzle).
+- **Top/Bottom Layers:** 0 lagen in de rol-zone voor maximale buigsaamheid.
+- **Flenzen:** 100% infill op de binnenste en buitenste montageflenzen (12-15 mm breed) voor een luchtdichte en stevige klem/lijmverbinding.
+
+#### C. Printbed Segmentatie (256×256 mm Bed)
+- **Aantal Segmenten:** **6 symmetrische segmenten van 60°**.
+- **Maximale Span per Segment:** **~204.5 mm** (inclusief 12 mm overlappende lijmflappen).
+- **Inpassing:** Past gemakkelijk diagonaal en gecentreerd op een **256×256 mm printbed** (zoals Bambu Lab X1/P1/A1 of Creality K1).
+
+#### D. Montage & Verlijmingshandleiding (Lap Joint Method)
+1. **Lijmflappen (Lap Joints):** Elk van de 6 segmenten is voorzien van een 12 mm overlappende rand (lap joint) aan de hoekuiteinden.
+2. **Lijmkeuze:** Cyanoacrylaat (CA-lijm / Secondelijm) gecombineerd met een **TPU/Polyurethaan Activator/Primer**, óf elastische Polyurethaan contactlijm (bijv. Seam Grip / Stormsure).
+3. **Voorbehandeling:** Schuur de contactoppervlakken licht op met p400 schuurpapier en ontvet grondig met isopropanol (IPA).
+4. **Assemblage:**
+   - Verlijm de 6 segmenten opeenvolgend in een houten of 3D-geprinte uitlijnmot (jig) tot een volledige ring van 385 mm.
+   - Verlijm de binnenflens aan de 3D-geprinte conus met 2-componenten epoxy of CA-lijm.
+   - Klem de buitenflens vast op de basket met de 3D-geprinte klemring en M3/M4 schroeven.
+
+---
 
 ### 5.2 TPU Spider (Ophanging / Centreerspin)
 - **Vorm:** Progressieve golving (concentrische ringen) om stijfheid te bieden rond de spreekspoel en flexibiliteit in het horizontale vlak.
@@ -73,5 +103,6 @@ Dit document bevat de volledige specificatie, berekeningen en bouwrichtlijnen vo
 
 ---
 
-## 7. Schematisch Overzicht Motor
-Zie het gegenereerde schematische diagram `motor_ontwerpen_vergelijking.png` voor de fysisch accurate doorsnede van de pot-motor inclusief de inwendige 50 mm ringvormige speling kamer.
+## 7. Schematische Overzichten & Visualisaties
+1. **Motor Doorsnede:** Zie `motor_ontwerpen_vergelijking.png` voor de fysisch accurate doorsnede van de neodymium pot-motor inclusief de inwendige 50 mm ringvormige speling kamer.
+2. **Surround & Printbed Layout:** Zie `surround_ontwerp_en_segmentatie.png` voor de profielvervorming van de High-Roll TPU surround bij ±50 mm uitslag en de inpassing van een 60° segment op een 256×256 mm printbed.

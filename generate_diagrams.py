@@ -1,5 +1,7 @@
+import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import numpy as np
 
 def draw_correct_motor_design():
     fig, ax = plt.subplots(figsize=(10, 8))
@@ -77,5 +79,121 @@ def draw_correct_motor_design():
     plt.savefig('motor_ontwerpen_vergelijking.png', dpi=150)
     print("Fysisch accurate doorsnede gegenereerd: motor_ontwerpen_vergelijking.png")
 
+
+def draw_surround_design_and_segmentation():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
+    fig.suptitle('TPU Surround Ontwerp voor 100mm Peak-to-Peak (±50mm) Uitslag op 256x256mm Bed', fontsize=14, fontweight='bold')
+
+    # Subplot 1: Doorsnede en Profiel bij 0mm, +50mm en -50mm uitslag
+    ax1.set_title('High-Roll TPU Surround Profiel Vervorming', fontsize=12, fontweight='bold')
+
+    # Parameters: Inner flange at r=157.5mm (Cone edge), Outer flange at r=192.5mm (Basket rim)
+    # Radial width w = 35mm. High-Roll height h = 25mm.
+    r_cone = 157.5
+    r_basket = 192.5
+
+    # 1. Rustpositie (0 mm uitslag) - Semi-ellips
+    theta = np.linspace(0, np.pi, 100)
+    r_roll_0 = r_cone + 17.5 * (1 - np.cos(theta))
+    z_roll_0 = 25.0 * np.sin(theta)
+
+    # Flanges
+    r_flange_inner = np.linspace(147.5, r_cone, 20)
+    z_flange_inner = np.zeros_like(r_flange_inner)
+
+    r_flange_outer = np.linspace(r_basket, 202.5, 20)
+    z_flange_outer = np.zeros_like(r_flange_outer)
+
+    ax1.plot(np.concatenate([r_flange_inner, r_roll_0, r_flange_outer]),
+             np.concatenate([z_flange_inner, z_roll_0, z_flange_outer]),
+             'b-', linewidth=3, label='Ruststand (0 mm uitslag)')
+
+    # 2. Uitwaartse Uitslag (+50 mm)
+    # Membraan stijgt naar z = +50 mm
+    z_flange_inner_out = np.full_like(r_flange_inner, 50.0)
+    # Profiel rekt/rolt mee van (157.5, 50) naar (192.5, 0)
+    # Semi-ellips vervormd
+    z_roll_out = 50.0 * (1 - theta / np.pi) + 18.0 * np.sin(theta)
+
+    ax1.plot(np.concatenate([r_flange_inner, r_roll_0, r_flange_outer]),
+             np.concatenate([z_flange_inner_out, z_roll_out, z_flange_outer]),
+             'r--', linewidth=2.5, label='Max Uitwaarts (+50 mm Xmech)')
+
+    # 3. Inwaartse Uitslag (-50 mm)
+    z_flange_inner_in = np.full_like(r_flange_inner, -50.0)
+    z_roll_in = -50.0 * (1 - theta / np.pi) - 18.0 * np.sin(theta)
+
+    ax1.plot(np.concatenate([r_flange_inner, r_roll_0, r_flange_outer]),
+             np.concatenate([z_flange_inner_in, z_roll_in, z_flange_outer]),
+             'g-.', linewidth=2.5, label='Max Inwaarts (-50 mm Xmech)')
+
+    # Aanduidingen
+    ax1.add_patch(patches.Rectangle((142.5, -55), 15, 110, facecolor='#e67e22', alpha=0.3, label='Conus Rand (3D-Geprint)'))
+    ax1.add_patch(patches.Rectangle((192.5, -15), 15, 30, facecolor='#7f8c8d', alpha=0.3, label='Basket Bevestigingsrand'))
+
+    ax1.annotate('100mm Peak-to-Peak\nTotale Slaglengte', xy=(147.5, 0), xytext=(115, 0),
+                 arrowprops=dict(facecolor='red', shrink=0.05, width=2, headwidth=7),
+                 fontsize=10, color='darkred', fontweight='bold')
+
+    ax1.annotate('High-Roll Boog\n(35mm Breed, 25mm Hoog)', xy=(175, 25), xytext=(160, 45),
+                 arrowprops=dict(facecolor='blue', shrink=0.05, width=1.5, headwidth=6),
+                 fontsize=9, color='blue', fontweight='bold')
+
+    ax1.set_xlabel('Radius r (mm)', fontsize=11)
+    ax1.set_ylabel('Verticale Positie z (mm)', fontsize=11)
+    ax1.set_xlim(110, 215)
+    ax1.set_ylim(-65, 65)
+    ax1.grid(True, linestyle='--', alpha=0.5)
+    ax1.legend(loc='lower left', fontsize=8)
+
+
+    # Subplot 2: Segmentering op 256x256 mm Printbed
+    ax2.set_title('Printbed Layout: 60° Segment op 256×256 mm Bed', fontsize=12, fontweight='bold')
+
+    # Draw 256x256 printbed
+    ax2.add_patch(patches.Rectangle((-128, -128), 256, 256, facecolor='#f8f9fa', edgecolor='black', linewidth=2, label='Printbed (256x256 mm)'))
+
+    # Draw 1 Segment of Surround (60 degrees, r_in = 147.5mm, r_out = 202.5mm)
+    # Center segment inside bed
+    # Rotate segment so it fits diagonally/centered
+    r_in = 147.5
+    r_out = 202.5
+    angles = np.linspace(-30, 30, 50)
+
+    # Outer arc
+    x_outer = r_out * np.cos(np.radians(angles)) - 150.0  # shifted to center on bed
+    y_outer = r_out * np.sin(np.radians(angles))
+
+    # Inner arc
+    x_inner = r_in * np.cos(np.radians(angles)) - 150.0
+    y_inner = r_in * np.sin(np.radians(angles))
+
+    # Segment polygon
+    x_seg = np.concatenate([x_outer, x_inner[::-1]])
+    y_seg = np.concatenate([y_outer, y_inner[::-1]])
+
+    ax2.fill(x_seg, y_seg, color='#2980b9', alpha=0.6, edgecolor='blue', linewidth=1.5, label='TPU Surround Segment (1/6e)')
+
+    # Draw overlapping lap joint flaps (+12mm extension at both angular edges)
+    ax2.annotate('12mm Overlappende\nLijmflap (Lap Joint)', xy=(x_outer[0], y_outer[0]), xytext=(x_outer[0]+10, y_outer[0]-25),
+                 arrowprops=dict(facecolor='green', shrink=0.05, width=1.5, headwidth=6),
+                 fontsize=9, color='darkgreen', fontweight='bold')
+
+    ax2.text(0, -115, 'Maximale Afmeting Segment: ~204.5 mm\nPast 100% Binnen 256x256 mm Printbed',
+             fontsize=10, fontweight='bold', color='black', ha='center', bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.5))
+
+    ax2.set_xlim(-135, 135)
+    ax2.set_ylim(-135, 135)
+    ax2.set_aspect('equal')
+    ax2.grid(True, linestyle='--', alpha=0.5)
+    ax2.set_xlabel('X (mm)', fontsize=11)
+    ax2.set_ylabel('Y (mm)', fontsize=11)
+    ax2.legend(loc='upper left', fontsize=8)
+
+    plt.tight_layout()
+    plt.savefig('surround_ontwerp_en_segmentatie.png', dpi=150)
+    print("Surround ontwerp & segmentatie afbeelding gegenereerd: surround_ontwerp_en_segmentatie.png")
+
 if __name__ == '__main__':
     draw_correct_motor_design()
+    draw_surround_design_and_segmentation()
