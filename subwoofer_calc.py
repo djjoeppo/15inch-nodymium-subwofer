@@ -19,9 +19,10 @@ def calculate_surround_parameters(x_mech_p2p_mm=100.0, outer_dia_mm=385.0, cone_
     # Benadering booglengte met Ramanujan ellipsomtrek:
     a = surround_radial_width_mm / 2.0  # 17.5 mm
     b = 25.0  # mm (rolhoogte)
-    # Halve ellips booglengte = pi * [3(a+b) - sqrt((3a+b)(a+3b))] / 2
+    # Halve ellips booglengte = pi * [3(a+b) - sqrt((3a+b)(a+3b))] / 2.0
     h_term = ((a - b) ** 2) / ((a + b) ** 2)
-    arc_length_mm = math.pi * (a + b) * (1 + (3 * h_term) / (10 + math.sqrt(4 - 3 * h_term)))
+    full_ellipse_perimeter = math.pi * (a + b) * (1 + (3 * h_term) / (10 + math.sqrt(4 - 3 * h_term)))
+    arc_length_mm = full_ellipse_perimeter / 2.0  # ~67.28 mm
 
     # Bij maximale uitslag van 50mm:
     # De gestrekte afstand tussen membraanrand en basket rand:

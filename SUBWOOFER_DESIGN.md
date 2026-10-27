@@ -61,9 +61,9 @@ Om een extreme mechanische uitslag van **100 mm peak-to-peak (±50 mm)** op te v
 - **Profiel Vorm:** **High-Roll Semi-Ellips / Angled High-Roll**.
 - **Radiale Breedte ($w$):** **35 mm** (tussen conus buitenrand $\varnothing 315 \text{ mm}$ en basket binnenrand $\varnothing 385 \text{ mm}$).
 - **Onbelaste Rolhoogte ($h$):** **25 mm**.
-- **Onbelaste Booglengte:** **~134.6 mm**.
+- **Onbelaste Booglengte:** **~67.3 mm**.
 - **Vervormingsmechanisme:** Bij een maximale uitslag van ±50 mm bedraagt de gestrekte lineaire afstand tussen conus- en basketrand slechts **61.0 mm** ($\sqrt{35^2 + 50^2}$).
-  - Doordat de onbelaste booglengte (134.6 mm) ruim groter is dan de gestrekte afstand (61.0 mm), hoeft het TPU materiaal **niet plastisch te strekken**.
+  - Doordat de onbelaste booglengte (67.3 mm) groter is dan de gestrekte afstand (61.0 mm), hoeft het TPU materiaal **niet plastisch te strekken**.
   - De verplaatsing wordt opgevangen door een natuurlijk, geleidelijk **afrollen en buigen** van het profiel.
   - De feitelijke materiaalrek blijft ruimschoots onder **<11%**, wat ver binnen het elastische bereik van TPU ligt (TPU verdraagt >400% rek zonder blijvende vervorming).
 
@@ -79,7 +79,7 @@ Bij het printen van TPU op hoge temperaturen (**240°C – 260°C**) voor maxima
    - Doordat de printkop per laag continue cirkelbogen verwerkt op 245°C - 255°C, ontstaat een extreem glad, rimpelloos en 100% luchtdicht oppervlak.
 
 **Oplossing voor Print-Stabiliteit ("Tall TPU Wobble"):**
-Om te voorkomen dat een flexibel TPU onderdeel van ~135 mm hoog gaat wankelen door de bewegingen van de printkop:
+Om te voorkomen dat een flexibel TPU onderdeel van ~67 mm hoog gaat wankelen door de bewegingen van de printkop:
 - **0.4 mm Sacrificiële Verstevigingsribben (Sacrificial Bracing Ribs):**
   - In de holte onder de rolboog zijn dunne **0.4 mm (1 perimeter)** driehoeks-verstevigingsribben geïntegreerd in het model.
   - Deze ribben maken het onderdeel tijdens het printen zo stijf als een vakwerkconstructie.
@@ -167,3 +167,31 @@ Om **100% zekerheid** te krijgen over de printbaarheid, flexibiliteit en naadste
    - **Test 1 (Flexibiliteit):** Buig de test-slice 180° dubbel. De rol hoort soepel mee te veren en direct terug te veren.
    - **Test 2 (Laagsterkte):** Probeer de lagen met de hand van elkaar te trekken. Bij 245°C is de laaghechting onverwoestbaar.
    - **Test 3 (Lijmnaad):** Breng een drup CA-lijm aan op de 12mm Lap Joint flap. Druk 15 seconden aan. Probeer de verbinding na 2 minuten los te trekken om de naadsterkte te verifiëren.
+
+---
+
+## 10. Evaluatie van Non-Planar Slicing voor TPU Surround
+
+Non-planar slicing (waarbij de Z-as simultaan meebeweegt met de curvatuur in plaats van vlakke 2D-lagen) is geëvalueerd voor de TPU surround:
+
+### 10.1 Voordelen van Non-Planar Slicing
+- **Oppervlakte-afwerking:** Geen trappetjeseffect (stair-stepping) op de glooiende bovenkant van de High-Roll boog.
+- **Continue Toplagen:** De toplaag van de boog kan als één continue gewelfde lijn worden neergelegd.
+
+### 10.2 Fysieke Beperkingen & Nadelen bij TPU Subwoofer Surround
+1. **Nozzle Clearance / Botsingsgevaar:**
+   - Standaard printkoppen (heater block + fan shroud) hebben een vrije hoek van maximaal **15° tot 20°** t.o.v. de verticale as.
+   - Onze High-Roll surround stijgt op onder een steilheid van **35° tot 45°**. Bij non-planar slicing van de flanken zou het hete heaterblock tegen de zijkant van de reeds geprinte TPU rol stoten en de flexibele wand indrukken.
+2. **Extrusiedruk bij Flexibel TPU:**
+   - Non-planar 3D-paden vereisen frequente, snelle Z-as acceleraties in combinatie met fluctuerende extrusiesnelheden.
+   - Doordat flexibel TPU meegeeft in het aanvoermechanisme (elasticiteit in de feeder/hotend), leidt dit snel tot vertraagde extrusieresponse en blob-vorming.
+
+### 10.3 Eindoordeel & Vergelijking
+
+| Eigenschap | Non-Planar Slicing (Plat op Bed) | Planaire Verticale Printoriëntatie (Onze Aanbevolen Methode) |
+| :--- | :--- | :--- |
+| **Botsingsrisico Nozzle** | Hoog (beperkt tot <15-20° hellingen) | **0% (Botsingsvrij)** |
+| **Mechanische Laagsterkte** | Matig (laagnaden worden op trek belast) | **Maximum (laagnaden lopen parallel aan buiglijn)** |
+| **Supportmateriaal Nodig?** | Ja (voor steile zijkanten) | **0% (Geen supports nodig)** |
+| **Printstabiliteit** | Uitstekend | **Uitstekend (met 0.4mm sacrificiële ribben + 10mm brim)** |
+| **Advies** | Niet aanbevolen voor High-Roll TPU. | **Aanbevolen Standaard** voor extreme uitslag subwoofer surround. |

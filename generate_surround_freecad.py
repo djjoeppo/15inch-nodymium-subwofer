@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Parametrische CAD Generator voor 100mm P2P TPU Surround Segment & 20mm Proef-Print Slice.
+Parametrische CAD Generator voor 100mm P2P TPU Surround Segment & Proef-Print Slice.
 Ondersteunt zowel standalone CadQuery (Python) als native FreeCAD Macro Execution (`import Part`).
 
 Genereert:
 1. Volledig 60° Surround Segment (STEP & STL)
-2. 15-Minuten TPU Proef-Print Slice (20mm hoog, ~3g TPU) voor risicoloos testen van laaghechtingssterkte en flexibiliteit.
+2. 15-Minuten TPU Proef-Print Slice (20mm boog, ~3g TPU) voor risicoloos testen van laaghechtingssterkte en flexibiliteit.
 """
 
 import math
@@ -14,7 +14,8 @@ def calculate_surround_profile_points(cone_radius=157.5, radial_width=35.0, roll
                                       wall_thickness=0.9, flange_width=10.0, num_steps=30):
     """
     Berekent de buitengrens- en binnengrenspunten van de High-Roll TPU surround met
-    exacte loodrechte normaalvectoren voor een gegarandeerde 0.9mm wanddikte.
+    loodrechte normaalvectoren voor een gegarandeerde 0.9mm wanddikte en
+    zonder zelf-intersecties op de flens-overgangen.
     """
     r_in = cone_radius - flange_width
     r_cone = cone_radius
@@ -26,39 +27,53 @@ def calculate_surround_profile_points(cone_radius=157.5, radial_width=35.0, roll
     outer_pts = []
     inner_pts = []
 
-    # 1. Binnenflens
+    # 1. Buitenprofiel (Binnenflens -> Semi-Ellips Boog -> Buitenflens) op Z >= 0
     outer_pts.append((r_in, 0.0))
-    inner_pts.append((r_in, -wall_thickness))
-
     outer_pts.append((r_cone, 0.0))
-    inner_pts.append((r_cone, -wall_thickness))
 
-    # 2. High-Roll Boog met loodrechte normaal offset
-    for i in range(1, num_steps):
+    for i in range(0, num_steps + 1):
         t = math.pi * (i / num_steps)
         r_outer = r_cone + a * (1.0 - math.cos(t))
         z_outer = b * math.sin(t)
-        outer_pts.append((r_outer, z_outer))
+        if i > 0 and i < num_steps:
+            outer_pts.append((r_outer, z_outer))
 
+        # Raaklijn vector (dr/dt, dz/dt) = (a*sin(t), b*cos(t))
         dr = a * math.sin(t)
         dz = b * math.cos(t)
         length = math.sqrt(dr*dr + dz*dz)
 
+        # Inwaartse loodrechte normaal vector (n_r, n_z)
         n_r = -dz / length
         n_z = dr / length
 
+        # Inwaartse offset met clamping van Z op minstens -wall_thickness
         r_inner = r_outer + wall_thickness * n_r
-        z_inner = z_outer - wall_thickness * abs(n_z)
+        z_inner = z_outer + wall_thickness * n_z
+        if z_inner < -wall_thickness:
+            z_inner = -wall_thickness
+
+        # Klem R binnen de flensgrenzen om kruisingen te voorkomen
+        if r_inner < r_cone:
+            r_inner = r_cone
+        if r_inner > r_basket:
+            r_inner = r_basket
+
         inner_pts.append((r_inner, z_inner))
 
-    # 3. Buitenflens
     outer_pts.append((r_basket, 0.0))
-    inner_pts.append((r_basket, -wall_thickness))
-
     outer_pts.append((r_out, 0.0))
-    inner_pts.append((r_out, -wall_thickness))
 
-    full_profile = outer_pts + list(reversed(inner_pts))
+    # Binnenprofiel onderzijde op Z = -wall_thickness
+    flange_inner_pts = []
+    flange_inner_pts.append((r_out, -wall_thickness))
+    flange_inner_pts.append((r_basket, -wall_thickness))
+    flange_inner_pts.extend(reversed(inner_pts))
+    flange_inner_pts.append((r_cone, -wall_thickness))
+    flange_inner_pts.append((r_in, -wall_thickness))
+
+    # Gesloten 2D Polygoon samenstellen
+    full_profile = outer_pts + flange_inner_pts
     full_profile.append(outer_pts[0])
 
     return full_profile, (r_cone, r_basket, r_out)
@@ -94,7 +109,7 @@ def create_cadquery_model(slice_angle_deg=60.0):
 
     final_part = segment_solid.union(lap_flap)
 
-    # 0.4mm Sacrificiële Rib
+    # 0.4mm Sacrificiële Rib (Z=0 tot Z=23mm)
     r_center = (r_cone + r_basket) / 2.0
     rib_height = roll_height - 2.0
 
@@ -168,24 +183,20 @@ def main():
         cq.exporters.export(model, step_file)
 
         print(f"Exporteren naar 3D-Print STL: {stl_file}...")
-        try:
-            cq.exporters.export(model, stl_file)
-        except Exception:
-            pass
+        cq.exporters.export(model, stl_file)
 
         print(f"Exporteren naar Proef-Print Slice STEP: {test_slice_step_file}...")
         cq.exporters.export(test_slice, test_slice_step_file)
 
         print(f"Exporteren naar Proef-Print Slice STL: {test_slice_stl_file}...")
-        try:
-            cq.exporters.export(test_slice, test_slice_stl_file)
-        except Exception:
-            pass
+        cq.exporters.export(test_slice, test_slice_stl_file)
 
         print("==================================================")
-        print(" SUCCESS! 3D CAD Bestanden gegenereerd:")
+        print(" SUCCESS! 3D CAD & STL Bestanden gegenereerd:")
         print(f" - Volledig Segment STEP: {step_file}")
+        print(f" - Volledig Segment STL:  {stl_file}")
         print(f" - 15-Minuten Test Slice STEP: {test_slice_step_file}")
+        print(f" - 15-Minuten Test Slice STL:  {test_slice_stl_file}")
         print("==================================================")
     else:
         run_freecad_macro()
